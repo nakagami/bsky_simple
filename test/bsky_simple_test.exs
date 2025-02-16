@@ -5,12 +5,12 @@ defmodule BlueskySimpleTest do
   @password TestHelpers.get_password()
 
   test "session_test" do
-    {:ok, session} = Bluesky.create_session(@identifier, @password)
+    {:ok, session} = BskySimple.create_session(@identifier, @password)
 
-    {:ok, result} = Bluesky.get_preference(session)
+    {:ok, result} = BskySimple.get_preference(session)
     assert Map.keys(result) == ["preferences"]
 
-    {:ok, result} = Bluesky.get_profile(session, @identifier)
+    {:ok, result} = BskySimple.get_profile(session, @identifier)
 
     assert Map.keys(result) == [
              "associated",
@@ -28,16 +28,16 @@ defmodule BlueskySimpleTest do
            ]
 
     {:ok, result} =
-      Bluesky.put_preferences(session, [
+      BskySimple.put_preferences(session, [
         %{
           "$type": "app.bsky.actor.defs#personalDetailsPref",
           birthDate: "1967-08-11T00:00:00.000Z"
         }
       ])
     assert result == nil
-    {:ok, session} = Bluesky.refresh_session(session)
+    {:ok, session} = BskySimple.refresh_session(session)
 
-    assert Bluesky.delete_session(session) == {:ok, nil}
+    assert BskySimple.delete_session(session) == {:ok, nil}
 
   end
 end

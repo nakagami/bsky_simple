@@ -1,8 +1,8 @@
-defmodule Bluesky do
+defmodule BskySimple do
   defstruct prefix: nil, data: nil
 
   @moduledoc """
-  Documentation for `Bluesky
+  Documentation for `BskySimple
   """
 
   @bluesky_prefix "https://bsky.social/xrpc/"
@@ -78,8 +78,8 @@ defmodule Bluesky do
 
   ## Examples
 
-      iex> Bluesky.create_session("XXX.bsky.social", "secret")
-      {:ok, %Bluesky.Session{...}}
+      iex> BskySimple.create_session("XXX.bsky.social", "secret")
+      {:ok, %BskySimple.Session{...}}
   """
   def create_session(identifier, password, prefix \\ @bluesky_prefix) do
     url = "#{prefix}com.atproto.server.createSession"
