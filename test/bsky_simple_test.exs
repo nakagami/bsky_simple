@@ -1,4 +1,4 @@
-defmodule BlueskyTest do
+defmodule BlueskySimpleTest do
   use ExUnit.Case
 
   @identifier TestHelpers.get_identifier()
