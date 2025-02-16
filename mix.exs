@@ -1,9 +1,9 @@
-defmodule Bluesky.MixProject do
+defmodule BskySimple.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :bluesky,
+      app: :bsky_simple,
       version: "0.1.0",
       elixir: "~> 1.17",
       start_permanent: Mix.env() == :prod,
