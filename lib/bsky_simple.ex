@@ -48,6 +48,11 @@ defmodule BskySimple do
     end
   end
 
+  defp _current_datetime() do
+    DateTime.utc_now()
+    |> DateTime.to_iso8601()
+  end
+
   # See Bluesky HTTP API reference
   # https://docs.bsky.app/docs/category/http-reference
 
@@ -63,9 +68,32 @@ defmodule BskySimple do
     _post(session, "app.bsky.actor.putPreferences", %{preferences: preferences})
   end
 
+  def send_post(%__MODULE__{prefix: prefix, data: data}=session, text) do
+    _post(session, "com.atproto.repo.createRecord", %{
+        "repo" => data.did,
+        "collection" => "app.bsky.feed.post",
+        "record" => [
+            "$type": "app.bsky.feed.post",
+            "text": text,
+            "createdAt": _current_datetime()
+        ]
+    })
+  end
+
+  def like_post(session, uri, cid) do
+    # TODO
+  end
+
+  def re_post(session, uri, cid) do
+    # TODO
+  end
 
   def delete_session(session) do
     _post(session, "com.atproto.server.deleteSession", "", "refreshJwt")
+  end
+
+  def unlike_post(session, uri) do
+    # TODO
   end
 
   def refresh_session(session) do
