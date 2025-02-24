@@ -22,12 +22,14 @@ defmodule BskySimple do
 
   defp _post(%__MODULE__{prefix: prefix, data: data}, path, params, token \\ "accessJwt") do
     url = "#{prefix}#{path}"
+
     params =
       if is_map(params) do
         Poison.encode!(params)
       else
         params
       end
+
     headers = [
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: "Bearer #{data[token]}"
@@ -68,24 +70,50 @@ defmodule BskySimple do
     _post(session, "app.bsky.actor.putPreferences", %{preferences: preferences})
   end
 
-  def send_post(%__MODULE__{prefix: prefix, data: data}=session, text) do
+  def send_post(%__MODULE__{prefix: prefix, data: data} = session, text) do
     _post(session, "com.atproto.repo.createRecord", %{
-        "repo" => data.did,
-        "collection" => "app.bsky.feed.post",
-        "record" => [
-            "$type": "app.bsky.feed.post",
-            "text": text,
-            "createdAt": _current_datetime()
-        ]
+      "repo" => data.did,
+      "collection" => "app.bsky.feed.post",
+      "record" => [
+        "$type": "app.bsky.feed.post",
+        text: text,
+        createdAt: _current_datetime()
+      ]
     })
   end
 
   def like_post(session, uri, cid) do
-    # TODO
+    _post(session, "com.atproto.repo.createRecord", %{
+      "repo" => data.did,
+      "collection" => "app.bsky.feed.post",
+      "record" => [
+        "$type": "app.bsky.feed.post",
+        subject: [
+          uri: uri,
+          cid: cid,
+          "$type": "com.atproto.repo.strongRef"
+        ],
+        validate: true,
+        createdAt: _current_datetime()
+      ]
+    })
   end
 
   def re_post(session, uri, cid) do
-    # TODO
+    _post(session, "com.atproto.repo.createRecord", %{
+      "repo" => data.did,
+      "collection" => "app.bsky.feed.repost",
+      "record" => [
+        "$type": "app.bsky.feed.repost",
+        subject: [
+          uri: uri,
+          cid: cid,
+          "$type": "com.atproto.repo.strongRef"
+        ],
+        validate: true,
+        createdAt: _current_datetime()
+      ]
+    })
   end
 
   def delete_session(session) do
